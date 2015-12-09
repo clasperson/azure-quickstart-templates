@@ -9,6 +9,7 @@
         "East US",
         "East Asia",
         "Southeast Asia",
+        "North Europe",
         "West Europe"
       ],
       "metadata": {
@@ -29,7 +30,7 @@
     },
     "adminUsername": {
       "type": "string",
-      "defaultValue": "azureuser",
+      "defaultValue": "phme",
       "metadata": {
         "description": "Virtual machine administrator username"
       }
@@ -61,7 +62,7 @@
     },
     "jumpbox": {
       "type": "string",
-      "defaultValue": "Disabled",
+      "defaultValue": "Enabled",
       "allowedValues": [
         "Enabled",
         "Disabled"
@@ -72,17 +73,17 @@
     },
     "virtualNetworkName": {
       "type": "string",
-      "defaultValue": "vnet",
+      "defaultValue": "pickitvn",
       "metadata": {
         "description": "Virtual network name"
       }
     }
   },
   "variables": {
-    "templateBaseUrl": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/postgresql-on-ubuntu/",
+    "templateBaseUrl": "https://raw.githubusercontent.com/clasperson/azure-quickstart-templates/master/postgresql-on-ubuntu/",
     "sharedTemplateUrl": "[concat(variables('templateBaseUrl'), 'shared-resources.json')]",
     "tshirtSizeSmall": {
-      "vmSize": "Standard_A1",
+      "vmSize": "Standard_D1",
       "diskSize": 1023,
       "vmTemplate": "[concat(variables('templateBaseUrl'), 'database-2disk-resources.json')]",
       "vmCount": 2,
@@ -99,7 +100,7 @@
       }
     },
     "tshirtSizeMedium": {
-      "vmSize": "Standard_A3",
+      "vmSize": "Standard_D3",
       "diskSize": 1023,
       "vmTemplate": "[concat(variables('templateBaseUrl'), 'database-8disk-resources.json')]",
       "vmCount": 2,
@@ -116,7 +117,7 @@
       }
     },
     "tshirtSizeLarge": {
-      "vmSize": "Standard_A4",
+      "vmSize": "Standard_D4",
       "diskSize": 1023,
       "vmTemplate": "[concat(variables('templateBaseUrl'), 'database-16disk-resources.json')]",
       "vmCount": 3,
@@ -134,7 +135,7 @@
       }
     },
     "tshirtSizeXLarge": {
-      "vmSize": "Standard_A4",
+      "vmSize": "Standard_D4",
       "diskSize": 1023,
       "vmTemplate": "[concat(variables('templateBaseUrl'), 'database-16disk-resources.json')]",
       "vmCount": 4,
@@ -172,13 +173,13 @@
       "vnetName": "[parameters('virtualNetworkName')]",
       "addressPrefix": "10.0.0.0/16",
       "subnets": {
-        "dmz": {
-          "name": "dmz",
+        "dbdmz": {
+          "name": "dbdmz",
           "prefix": "10.0.0.0/24",
           "vnet": "[parameters('virtualNetworkName')]"
         },
-        "data": {
-          "name": "data",
+        "db": {
+          "name": "db",
           "prefix": "10.0.1.0/24",
           "vnet": "[parameters('virtualNetworkName')]"
         }
@@ -241,7 +242,7 @@
             "value": "[variables('osSettings')]"
           },
           "subnet": {
-            "value": "[variables('networkSettings').subnets.data]"
+            "value": "[variables('networkSettings').subnets.db]"
           },
           "commonSettings": {
             "value": {
@@ -294,7 +295,7 @@
             "value": "[variables('osSettings')]"
           },
           "subnet": {
-            "value": "[variables('networkSettings').subnets.data]"
+            "value": "[variables('networkSettings').subnets.db]"
           },
           "commonSettings": {
             "value": {
@@ -356,7 +357,7 @@
             "value": "[parameters('adminPassword')]"
           },
           "subnet": {
-            "value": "[variables('networkSettings').subnets.dmz]"
+            "value": "[variables('networkSettings').subnets.dbdmz]"
           },
           "osSettings": {
             "value": "[variables('osSettings')]"
